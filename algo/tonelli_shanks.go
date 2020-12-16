@@ -37,6 +37,7 @@ func eulerCriterion(n, p int64) int64 {
 // TonelliShanks - to solve for r in a congruence of the form r2 ≡ n (mod p),
 // where p is a prime: that is, to find a square root of n modulo p.
 // https://en.wikipedia.org/wiki/Tonelli%E2%80%93Shanks_algorithm
+// it returns one solution if exists otherwise -1
 func TonelliShanks(n, p int64) int64 {
 	if eulerCriterion(n, p) != 1 {
 		return -1
@@ -71,9 +72,9 @@ func TonelliShanks(n, p int64) int64 {
 
 	// step: 3
 	m := S
-	c := bigPow(z, Q, 0)
-	t := bigPow(n, Q, 0)
-	R := bigPow(n, (Q+1)/2, 0)
+	c := bigPow(z, Q, p)
+	t := bigPow(n, Q, p)
+	R := bigPow(n, (Q+1)/2, p)
 
 	for {
 		if t == 0 {
@@ -83,10 +84,17 @@ func TonelliShanks(n, p int64) int64 {
 			return R
 		}
 		var nextI int64 = 0
-		for bigPow(t, 1<<nextI, p) != 1 {
+		for bigPow(t, 1<<nextI, p) != 1 && nextI < m {
+			// debug(bigPow(t, 1<<nextI, p))
 			nextI++
 		}
 		// debug(fmt.Sprintf("nextI: %v", nextI))
+
+		if nextI == m {
+			fmt.Println("Unexpected error in algorithm, possible negative shifting.")
+			return -1
+		}
+
 		b := bigPow(c, 1<<(m-nextI-1), p)
 		bSqr := bigPow(b, 2, p)
 		m = nextI
