@@ -83,7 +83,7 @@ func TonelliShanks(n, p int64) int64 {
 		if t == 1 {
 			return R
 		}
-		var nextI int64 = 0
+		var nextI int64 = 1
 		for bigPow(t, 1<<nextI, p) != 1 && nextI < m {
 			// debug(bigPow(t, 1<<nextI, p))
 			nextI++
