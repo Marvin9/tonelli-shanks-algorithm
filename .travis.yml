@@ -1,0 +1,7 @@
+langugage: go
+
+go:
+    - 1.15
+
+script:
+    - make test
